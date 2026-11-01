@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10131d">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>HabitFlow — 52-Week Habit Tracker</title>
+<meta name="description" content="Build consistency one day at a time with HabitFlow, your personal 52-week habit tracker.">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<style>
+:root{--bg:#10131d;--panel:#1a2030;--panel2:#222a3d;--text:#f4f6fb;--muted:#aab3c7;--accent:#8b7cff;--green:#62dfb2;--line:#30394f}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#10131d,#17182a);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}main{max-width:1150px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}.eyebrow{color:var(--green);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}h1{margin:5px 0;font-size:clamp(25px,4vw,38px)}p{color:var(--muted);margin:4px 0 0}.profile,.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:18px}.profile{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:12px}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}.field input,.field select,button{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:11px;font:inherit}.field input::placeholder{color:#78839a}button{cursor:pointer;font-weight:700;background:var(--accent);border-color:transparent}button.secondary{background:var(--panel2);border:1px solid var(--line)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}.stat span{font-size:12px;color:var(--muted)}.stat strong{display:block;font-size:25px;margin-top:5px}.layout{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}.panel h2{margin:0 0 12px;font-size:18px}.chart{height:180px;display:flex;align-items:end;gap:5px;padding:10px 0 0}.barwrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}.bar{width:100%;max-width:32px;min-height:3px;background:linear-gradient(180deg,var(--accent),#5146ad);border-radius:7px 7px 2px 2px}.barwrap small{font-size:10px;color:var(--muted)}.progressline{height:9px;background:#30394f;border-radius:99px;overflow:hidden;margin:10px 0}.progressline div{height:100%;background:var(--green);width:0%}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0}.toolbar select{background:var(--panel2);color:var(--text);border:1px solid var(--line);padding:10px;border-radius:10px}.habitadd{display:flex;gap:8px}.habitadd input{flex:1;min-width:0;background:var(--panel2);color:var(--text);border:1px solid var(--line);padding:10px;border-radius:10px}.weekgrid{display:grid;grid-template-columns:repeat(7,minmax(35px,1fr));gap:7px}.dayhead{text-align:center;color:var(--muted);font-size:11px;padding:5px}.daycell{background:var(--panel2);border:1px solid var(--line);border-radius:10px;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}.daycell input{accent-color:var(--green);width:18px;height:18px}.daycell small{font-size:11px;color:var(--muted)}.habitrow{display:grid;grid-template-columns:minmax(130px,1fr) 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.habitrow:last-child{border:0}.habitname{font-weight:650;overflow-wrap:anywhere}.miniweek{display:flex;gap:4px}.miniweek label{display:flex;align-items:center;justify-content:center;width:23px;height:25px;background:var(--panel2);border-radius:5px}.miniweek input{width:13px;height:13px;accent-color:var(--green)}.remove{background:transparent;color:#ff9aab;border:0;width:auto;padding:4px 8px}.note{font-size:12px;color:var(--muted);margin-top:12px}.empty{color:var(--muted);padding:16px 0}.bottom{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+@media(max-width:750px){main{padding:14px}.profile{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.layout{grid-template-columns:1fr}.habitrow{grid-template-columns:1fr auto}.miniweek{grid-column:1/-1;grid-row:2}.weekgrid{gap:4px}.daycell{min-height:53px}}
+
+.week-progress-row{display:flex;align-items:center;gap:18px;margin:12px 0 20px}.week-ring{width:116px;flex:0 0 116px;overflow:visible}.ring-track{fill:none;stroke:#30394f;stroke-width:14}.ring-value{fill:none;stroke:var(--week-color,#62dfb2);stroke-width:14;stroke-linecap:round;transition:stroke-dasharray .75s cubic-bezier(.2,.8,.2,1),stroke .3s}.week-ring text{fill:var(--text);font-size:22px;font-weight:800}.weekmap{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:6px}.week-tile{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:7px 2px;text-align:center;cursor:pointer;transition:transform .2s,border-color .2s}.week-tile:hover{transform:translateY(-2px)}.week-tile.active{border-color:var(--week-color);box-shadow:0 0 0 1px var(--week-color)}.week-tile small{display:block;color:var(--muted);font-size:10px}.week-tile b{font-size:12px}.month-summary{display:flex;align-items:baseline;gap:12px;margin:14px 0}.month-summary strong{font-size:32px}.month-chart{height:140px;display:flex;align-items:end;gap:4px;padding-top:10px}.month-bar{flex:1;min-width:2px;border-radius:5px 5px 1px 1px;background:linear-gradient(180deg,#62dfb2,#3b9e9b);height:2px;transition:height .65s cubic-bezier(.2,.8,.2,1);animation:rise .7s ease both}.month-bar.done{filter:brightness(1.2)}@keyframes rise{from{height:2px;opacity:.3}to{opacity:1}}.daycell input:checked{transform:scale(1.15);transition:transform .15s}
+@media(max-width:700px){main{padding:12px}.profile{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.weekmap{grid-template-columns:repeat(7,minmax(0,1fr))}.week-progress-row{gap:12px}}
+
+/* HabitFlow responsive refinement */
+html{width:100%;min-width:320px;overflow-x:hidden}
+body{width:100%;min-width:320px;overflow-x:hidden}
+main{width:100%;max-width:1180px;margin:0 auto;padding:clamp(12px,2.5vw,28px)}
+.top{width:100%;min-width:0}
+.profile,.stats,.layout,.panel{width:100%;min-width:0}
+.profile{grid-template-columns:repeat(4,minmax(0,1fr))}
+.layout{grid-template-columns:minmax(0,1.35fr) minmax(280px,.85fr);align-items:stretch}
+.panel{overflow:hidden}
+.field input,.field select{width:100%;min-width:0}
+.toolbar select{max-width:100%}
+.habitadd{width:min(100%,560px);min-width:0}
+.habitadd input{width:100%;min-width:0}
+.weekmap{grid-template-columns:repeat(13,minmax(0,1fr))}
+.month-chart{width:100%;min-width:0}
+@media(max-width:760px){
+  main{padding:12px;max-width:100%}
+  .top{align-items:flex-start}
+  .top>button{width:auto!important;max-width:100%;white-space:nowrap}
+  .profile{grid-template-columns:repeat(2,minmax(0,1fr));padding:14px;gap:10px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .stat{padding:13px;min-width:0}
+  .stat strong{font-size:22px}
+  .layout{grid-template-columns:minmax(0,1fr);gap:12px}
+  .panel{padding:14px;border-radius:16px;margin-top:12px}
+  .week-progress-row{gap:14px}
+  .week-ring{width:104px;flex-basis:104px}
+  .weekmap{grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+  .week-tile{padding:8px 2px;min-height:48px}
+  .week-tile small{font-size:9px}
+  .week-tile b{font-size:11px}
+  .month-chart{height:128px;gap:3px}
+  .toolbar{gap:7px}
+  .habitadd{width:100%}
+  .habitadd button{width:auto!important;flex:0 0 auto}
+  .weekgrid{grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+  .daycell{min-width:0;min-height:52px}
+  .dayhead{font-size:10px;padding:3px 0}
+  .habitrow{grid-template-columns:minmax(0,1fr) auto;gap:8px}
+  .miniweek{grid-column:1/-1;grid-row:2;justify-content:space-between;gap:5px}
+  .miniweek label{flex:1;max-width:42px;height:34px}
+  .miniweek input{width:17px;height:17px}
+  .bottom{align-items:flex-start}
+}
+@media(max-width:380px){
+  main{padding:9px}
+  .profile{padding:11px}
+  .stat{padding:11px}
+  .stat strong{font-size:20px}
+  .week-progress-row{gap:9px}
+  .week-ring{width:90px;flex-basis:90px}
+  .week-tile{min-height:44px}
+  .week-tile b{font-size:10px}
+}
+
+/* HabitFlow individual habit colour system + mobile-first refinements */
+:root{--accent:#62dfb2;--green:#62dfb2;--line:#30394f}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.section-head h2{margin:0 0 4px}.insight-total{font-size:11px;color:var(--muted);background:var(--panel2);padding:6px 9px;border-radius:99px;white-space:nowrap}
+.habit-performance{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.performance-item{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px;min-width:0;animation:cardIn .35s ease both}
+.performance-top{display:flex;align-items:center;gap:9px;min-width:0}.habit-icon{width:34px;height:34px;display:grid;place-items:center;flex:0 0 34px;border-radius:11px;background:color-mix(in srgb,var(--habit-color) 17%,transparent);font-size:19px}
+.performance-name{font-weight:800;overflow-wrap:anywhere;line-height:1.25;flex:1;min-width:0}.performance-pct{font-size:20px;font-weight:850;color:var(--habit-color);font-variant-numeric:tabular-nums}
+.performance-meta{font-size:11px;color:var(--muted);margin:7px 0 6px}.performance-track{height:8px;background:#30394f;border-radius:99px;overflow:hidden}.performance-fill{height:100%;width:0;background:var(--habit-color);border-radius:99px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.habitrow{grid-template-columns:minmax(0,1fr) auto;gap:9px;padding:13px 0}.habit-title{display:flex;align-items:center;gap:9px;min-width:0}.habit-title .habit-icon{width:36px;height:36px;flex-basis:36px}.habitname{font-weight:850;font-size:14px;line-height:1.3}.habit-sub{display:block;color:var(--muted);font-size:11px;font-weight:500;margin-top:3px}.habit-actions{display:flex;align-items:center;gap:7px}.habit-week-pct{font-weight:850;font-size:13px;color:var(--habit-color);white-space:nowrap}.miniweek label{border:1px solid color-mix(in srgb,var(--habit-color) 38%,transparent);background:color-mix(in srgb,var(--habit-color) 10%,var(--panel2))}.miniweek input{accent-color:var(--habit-color)}
+.daycell input{accent-color:var(--habit-color)}
+.progressline div{background:linear-gradient(90deg,#4DA3FF,#36D6A5,#B18CFF,#FF9B57,#F16FA6)}
+.week-ring .ring-track{stroke:#30394f}.week-ring .ring-value{stroke:var(--accent)}
+.week-ring .ring-segment{fill:none;stroke-width:14;stroke-linecap:round;transition:stroke-dasharray .7s ease,stroke-dashoffset .7s ease}
+.weekmap .week-tile{position:relative;overflow:hidden;background:linear-gradient(145deg,color-mix(in srgb,var(--week-color) 18%,var(--panel2)),var(--panel2))}.week-tile.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.month-chart{align-items:stretch;height:150px;gap:3px}.month-day{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px}.month-stack{height:120px;width:100%;display:flex;flex-direction:column-reverse;justify-content:flex-start;align-items:stretch;gap:1px;background:rgba(255,255,255,.025);border-radius:5px 5px 2px 2px;overflow:hidden}.month-segment{width:100%;min-height:0;transition:height .65s cubic-bezier(.2,.8,.2,1);border-radius:2px 2px 0 0;animation:rise .55s ease both}.month-day small{font-size:9px;color:var(--muted)}
+.week-progress-row{align-items:center}.week-progress-copy strong{font-size:18px}.week-progress-copy p{font-size:12px}
+@keyframes cardIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){.habit-performance{grid-template-columns:1fr}.performance-item{padding:11px}.habitrow{grid-template-columns:minmax(0,1fr) auto}.miniweek{grid-column:1/-1;grid-row:2}.month-chart{height:145px}.month-stack{height:112px}.section-head{align-items:center}}
+@media(max-width:380px){.performance-pct{font-size:18px}.habit-title .habit-icon{width:32px;height:32px;flex-basis:32px}.habitname{font-size:13px}.month-chart{gap:2px}.month-day small{font-size:8px}}
+
+</style>
+</head>
+<body>
+<main>
+  <div id="installNotice" class="panel" style="display:none;margin-top:12px"><strong>Install your HabitFlow</strong><p id="installHelp">Add this app to your home screen for quick access.</p><button id="installButton" style="width:auto;margin-top:10px">Install app</button></div>
+  <header class="top"><div><div class="eyebrow">Your year, one week at a time</div><h1>HabitFlow</h1><p>Track every habit. See every small win.</p></div><button class="secondary" id="todayBtn" style="width:auto">Jump to current week</button></header>
+  <section class="profile">
+    <div class="field"><label for="name">Your name</label><input id="name" placeholder="Enter your name" maxlength="50"></div>
+    <div class="field"><label for="gender">Gender</label><select id="gender"><option value="">Select</option><option>Female</option><option>Male</option><option>Prefer not to say</option></select></div>
+    <div class="field"><label for="year">Tracker year</label><select id="year"></select></div>
+    <div class="field"><label for="month">Month view</label><select id="month"></select></div>
+  </section>
+  <section class="stats">
+    <div class="stat"><span>Yearly completion</span><strong id="yearPct">0%</strong><div class="progressline"><div id="yearBar"></div></div></div>
+    <div class="stat"><span>Habits tracked</span><strong id="habitCount">0</strong></div>
+    <div class="stat"><span>Current streak</span><strong id="streak">0 days</strong></div>
+    <div class="stat"><span>Start date</span><strong id="startDate" style="font-size:17px">—</strong></div>
+  </section>
+  <div class="layout">
+    <section class="panel">
+<h2>Weekly progress</h2><p id="weekChartCaption">Week 1 completion</p>
+<div class="week-progress-row"><svg class="week-ring" viewBox="0 0 120 120" aria-label="Weekly progress"><circle cx="60" cy="60" r="48" class="ring-track"/><g id="weekDonutSegments" transform="rotate(-90 60 60)"></g><text id="weekRingText" x="60" y="66" text-anchor="middle">0%</text></svg><div class="week-progress-copy"><strong id="weekChecks">0 / 0</strong><p>completed this week</p><p class="note" id="weekMonthLabel">Week 1 · January</p><p class="note">Each habit is shown in its own colour.</p></div></div>
+<div class="weekmap" id="weekMap"></div>
+<p id="chartCaption" class="note">Your progress will appear here as you check off habits.</p></section>
+    <section class="panel"><h2>Monthly rhythm</h2><p id="monthCaption">Selected month activity</p><div class="month-summary"><strong id="monthPct">0%</strong><p id="monthDetails">0 of 0 checks</p></div><div class="month-chart" id="monthChart" aria-label="Daily habit completion for the selected month"></div><p class="note">Daily completion bars animate as your month updates.</p></section>
+  </div>
+  <section class="panel habit-insights">
+    <div class="section-head"><div><h2>Habit performance</h2><p>Each habit has its own colour and yearly completion score.</p></div><span class="insight-total" id="insightTotal">0 habits</span></div>
+    <div id="habitPerformance" class="habit-performance"></div>
+  </section>
+  <section class="panel">
+    <div class="top"><div><h2 id="weekTitle">Week 1</h2><p id="weekDates">Select a week to track your habits</p></div><div class="toolbar" style="margin:0"><button class="secondary" id="prev">←</button><select id="weekSelect" aria-label="Select week"></select><button class="secondary" id="next">→</button></div></div>
+    <div class="toolbar"><div class="habitadd"><input id="habitInput" placeholder="Add a habit (e.g. Walk 20 minutes)" maxlength="70"><button id="addHabit" style="width:auto">Add habit</button></div><button class="secondary" id="copyPrev" style="width:auto">Copy habits from previous year</button></div>
+    <div class="weekgrid" id="weekGrid"></div>
+    <div id="habitRows"></div>
+    <div class="bottom"><span class="note">Your progress is saved automatically on this device. Export a backup to move it elsewhere.</span><button class="secondary" id="export" style="width:auto">Export year backup</button></div>
+  </section>
+</main>
+<script>
+const today=new Date(); const currentYear=today.getFullYear();
+const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const habitPalette=["#4DA3FF","#36D6A5","#B18CFF","#FF9B57","#F16FA6","#E4C84F","#42C6D8","#A5D66B","#F07878","#8D9BFF","#D28BE8","#65C28B"];
+const key=(y)=>"habit52_data_"+y;
+let state={profile:{name:"",gender:""},years:{},year:currentYear,week:1,month:today.getMonth(),firstOpen:null};
+function getYear(y){if(!state.years[y])state.years[y]={habits:[],checks:{}};if(!Array.isArray(state.years[y].habits))state.years[y].habits=[];if(!state.years[y].checks)state.years[y].checks={};return state.years[y]}
+function habitName(h){return typeof h==="string"?h:(h&&h.name)||"Untitled habit"}
+function habitIcon(h){if(h&&typeof h==="object"&&h.icon)return h.icon;const t=habitName(h).toLowerCase();const rules=[[/water|hydr|drink|glass|lit(er|re)/,"💧"],[/read|book|page|study|learn|course/ ,"📚"],[/workout|gym|exercise|train|run|walk|jog|fitness|yoga/ ,"🏃"],[/meditat|mindful|breath|pray/ ,"🧘"],[/sleep|bed|wake|early/ ,"🌙"],[/vitamin|medicine|medication|pill/ ,"💊"],[/food|cook|meal|eat|diet|fruit|vegetable/ ,"🥗"],[/journal|write|diary|gratitude/ ,"📓"],[/clean|tidy|room|house/ ,"🧹"],[/money|save|spend|budget|finance/ ,"💰"],[/screen|phone|social media|digital detox/ ,"📵"],[/music|guitar|piano|instrument/ ,"🎵"],[/skill|practice|create|draw|art/ ,"🎨"],[/friend|family|call|connect/ ,"💛"],[/stretch|mobility/ ,"🤸"],[/work|business|task|goal/ ,"🎯"]];for(const [re,icon] of rules)if(re.test(t))return icon;return "✨"}
+function habitColor(h,i){return (h&&typeof h==="object"&&h.color)||habitPalette[i%habitPalette.length]}
+function load(){try{const saved=JSON.parse(localStorage.getItem("habit52_app")||"null");if(saved)state={...state,...saved};}catch(e){}if(!state.firstOpen){state.firstOpen=today.toISOString().slice(0,10);save()}getYear(state.year);Object.values(state.years).forEach(y=>{if(y&&Array.isArray(y.habits))y.habits=y.habits.map((h,i)=>typeof h==="string"?{name:h,icon:habitIcon(h),color:habitPalette[i%habitPalette.length]}:{...h,icon:h.icon||habitIcon(h),color:h.color||habitPalette[i%habitPalette.length]})})}
+function save(){try{localStorage.setItem("habit52_app",JSON.stringify(state))}catch(e){alert("Your browser storage is full. Export a backup and free some space.")}}
+function dateForWeek(y,w){const jan1=new Date(y,0,1);const day=jan1.getDay();const mondayOffset=(day===0?-6:1-day);const firstMonday=new Date(y,0,1+mondayOffset);const d=new Date(firstMonday);d.setDate(firstMonday.getDate()+(w-1)*7);return d}
+function fmt(d){return d.toLocaleDateString(undefined,{month:"short",day:"numeric"})}
+function dateKey(y,w,d){return `${y}-W${String(w).padStart(2,"0")}-D${d}`}
+function data(){return getYear(state.year)}
+function checked(h,w,d){return !!data().checks[`${h}|${dateKey(state.year,w,d)}`]}
+function setCheck(h,w,d,v){data().checks[`${h}|${dateKey(state.year,w,d)}`]=v;save();render()}
+function renderProfile(){document.getElementById("name").value=state.profile.name||"";document.getElementById("gender").value=state.profile.gender||""}
+function render(){const y=state.year,d=data(),w=state.week,start=dateForWeek(y,w),end=new Date(start);end.setDate(start.getDate()+6);
+document.getElementById("weekTitle").textContent=`Week ${w}`;document.getElementById("weekDates").textContent=`${fmt(start)} – ${fmt(end)}, ${y}`;document.getElementById("weekMonthLabel").textContent=`Week ${w} · ${months[start.getMonth()]} ${y}`;
+document.getElementById("startDate").textContent=state.firstOpen?new Date(state.firstOpen+"T12:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):"—";document.getElementById("habitCount").textContent=d.habits.length;
+let yearDone=0,yearTotal=d.habits.length*364;d.habits.forEach((h,hi)=>{for(let wk=1;wk<=52;wk++)for(let day=0;day<7;day++)if(checked(hi,wk,day))yearDone++});const yp=yearTotal?Math.round(yearDone/yearTotal*100):0;document.getElementById("yearPct").textContent=yp+"%";document.getElementById("yearBar").style.width=yp+"%";
+const weekStats=d.habits.map((h,hi)=>{let n=0;for(let day=0;day<7;day++)if(checked(hi,w,day))n++;return {h,hi,n,pct:n/7*100,color:habitColor(h,hi)}});const weekDone=weekStats.reduce((a,x)=>a+x.n,0),weekTotal=d.habits.length*7,wc=weekTotal?weekDone/weekTotal*100:0,circ=2*Math.PI*48,slot=circ/Math.max(1,weekStats.length);
+document.getElementById("weekDonutSegments").innerHTML=weekStats.map((x,i)=>{const len=slot*x.pct/100;return `<circle class="ring-segment" cx="60" cy="60" r="48" stroke="${x.color}" stroke-dasharray="${len} ${circ-len}" stroke-dashoffset="${-slot*i}"/>`}).join("");document.getElementById("weekRingText").textContent=Math.round(wc)+"%";document.getElementById("weekChecks").textContent=`${weekDone} / ${weekTotal}`;
+const weekPerc=[];for(let i=1;i<=52;i++){let n=0;d.habits.forEach((h,hi)=>{for(let day=0;day<7;day++)if(checked(hi,i,day))n++});weekPerc.push(d.habits.length?n/(d.habits.length*7)*100:0)}
+document.getElementById("weekMap").innerHTML=weekPerc.map((v,i)=>{const col=habitPalette[i%habitPalette.length];return `<div class="week-tile ${i+1===w?"active":""}" style="--week-color:${col};--accent:${col}" data-week="${i+1}" title="Open week ${i+1}"><small>W${i+1}</small><b>${Math.round(v)}%</b></div>`}).join("");document.querySelectorAll(".week-tile").forEach(el=>el.addEventListener("click",()=>{state.week=Number(el.dataset.week);weekSel.value=state.week;save();render()}));
+document.getElementById("chartCaption").textContent=`${weekDone} of ${weekTotal} habit check-ins completed in Week ${w}.`;
+// Monthly daily completion, with stacked segments coloured by each habit.
+const days=new Date(y,state.month+1,0).getDate();let monthDone=0,monthTotal=0;const daily=Array.from({length:days},()=>d.habits.map(()=>false));const dailyTotals=Array(days).fill(0),dailyDone=Array(days).fill(0);
+d.habits.forEach((h,hi)=>{for(let wk=1;wk<=52;wk++){const base=dateForWeek(y,wk);for(let day=0;day<7;day++){const dt=new Date(base);dt.setDate(base.getDate()+day);if(dt.getFullYear()===y&&dt.getMonth()===state.month){const di=dt.getDate()-1;daily[di][hi]=checked(hi,wk,day);dailyTotals[di]++;monthTotal++;if(daily[di][hi]){dailyDone[di]++;monthDone++}}}}});const mp=monthTotal?Math.round(monthDone/monthTotal*100):0;document.getElementById("monthPct").textContent=mp+"%";document.getElementById("monthDetails").textContent=`${monthDone} of ${monthTotal} checks`;document.getElementById("monthCaption").textContent=months[state.month]+" "+y;
+document.getElementById("monthChart").innerHTML=daily.map((items,di)=>{const pieces=items.map((on,hi)=>on?`<i class="month-segment" style="height:${100/Math.max(1,d.habits.length)}%;background:${habitColor(d.habits[hi],hi)}" title="${escapeHtml(habitName(d.habits[hi]))}: complete"></i>`:"").join("");const pct=dailyTotals[di]?Math.round(dailyDone[di]/dailyTotals[di]*100):0;return `<div class="month-day" title="${months[state.month]} ${di+1}: ${pct}%"><div class="month-stack">${pieces}</div><small>${di+1}</small></div>`}).join("");
+// Habit-by-habit annual completion dashboard.
+document.getElementById("insightTotal").textContent=`${d.habits.length} ${d.habits.length===1?"habit":"habits"}`;document.getElementById("habitPerformance").innerHTML=d.habits.length?d.habits.map((h,hi)=>{let n=0;for(let wk=1;wk<=52;wk++)for(let day=0;day<7;day++)if(checked(hi,wk,day))n++;const pct=Math.round(n/364*100),color=habitColor(h,hi);return `<article class="performance-item" style="--habit-color:${color}"><div class="performance-top"><span class="habit-icon">${habitIcon(h)}</span><strong class="performance-name">${escapeHtml(habitName(h))}</strong><b class="performance-pct">${pct}%</b></div><div class="performance-meta">${n} of 364 days completed this year</div><div class="performance-track"><div class="performance-fill" style="width:${pct}%"></div></div></article>`}).join(""):`<p class="empty">Your individual habit progress will appear here after you add habits.</p>`;
+// Current week's day headings and calendar dates.
+document.getElementById("weekGrid").innerHTML=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(day=>`<div class="dayhead">${day}</div>`).join("")+Array.from({length:7},(_,i)=>{const dt=new Date(start);dt.setDate(start.getDate()+i);return `<div class="daycell"><small>${dt.getDate()}</small><span style="font-size:10px;color:var(--muted)">${months[dt.getMonth()].slice(0,3)}</span></div>`}).join("");
+document.getElementById("habitRows").innerHTML=d.habits.length?d.habits.map((h,hi)=>{const color=habitColor(h,hi),n=weekStats[hi].n;return `<div class="habitrow" style="--habit-color:${color}"><div class="habit-title"><span class="habit-icon">${habitIcon(h)}</span><div class="habitname">${escapeHtml(habitName(h))}<span class="habit-sub">${n}/7 days this week</span></div></div><div class="habit-actions"><span class="habit-week-pct">${Math.round(n/7*100)}%</span><button class="remove" data-remove="${hi}" title="Remove habit" aria-label="Remove ${escapeHtml(habitName(h))}">×</button></div><div class="miniweek">${Array.from({length:7},(_,day)=>`<label title="${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][day]}"><input type="checkbox" ${checked(hi,w,day)?"checked":""} data-h="${hi}" data-d="${day}" aria-label="${escapeHtml(habitName(h))} ${["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"][day]}"></label>`).join("")}</div></div>`}).join(""):`<div class="empty">Add your first habit above to begin tracking.</div>`;
+document.querySelectorAll("#habitRows input").forEach(el=>el.addEventListener("change",()=>setCheck(+el.dataset.h,+state.week,+el.dataset.d,el.checked)));document.querySelectorAll("[data-remove]").forEach(el=>el.addEventListener("click",()=>{const i=+el.dataset.remove;if(confirm("Remove this habit and its check-ins for this year?")){d.habits.splice(i,1);const nextChecks={};for(const [k,v] of Object.entries(d.checks)){const split=k.indexOf("|");const idx=Number(k.slice(0,split));const suffix=k.slice(split);if(idx===i)continue;nextChecks[(idx>i?idx-1:idx)+suffix]=v}d.checks=nextChecks;save();render()}}));
+let streak=0;for(let back=0;back<365;back++){let dt=new Date(today);dt.setDate(today.getDate()-back);if(dt.getFullYear()!==y)break;const wk=Math.min(52,Math.max(1,Math.ceil((dt-new Date(y,0,1))/(7*86400000))));const day=(dt.getDay()+6)%7;const any=d.habits.some((h,hi)=>checked(hi,wk,day));if(any)streak++;else if(back>0)break}document.getElementById("streak").textContent=streak+" days";
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+load();
+const yearSel=document.getElementById("year");for(let y=currentYear-2;y<=currentYear+10;y++){const o=document.createElement("option");o.value=y;o.textContent=y;yearSel.appendChild(o)}yearSel.value=state.year;
+const monthSel=document.getElementById("month");months.forEach((m,i)=>{let o=document.createElement("option");o.value=i;o.textContent=m;monthSel.appendChild(o)});monthSel.value=state.month;
+const weekSel=document.getElementById("weekSelect");for(let w=1;w<=52;w++){let o=document.createElement("option");o.value=w;o.textContent="Week "+w;weekSel.appendChild(o)}weekSel.value=state.week;
+renderProfile();render();
+document.getElementById("name").addEventListener("input",e=>{state.profile.name=e.target.value;save()});document.getElementById("gender").addEventListener("change",e=>{state.profile.gender=e.target.value;save()});
+yearSel.addEventListener("change",e=>{state.year=+e.target.value;getYear(state.year);state.week=state.year===currentYear?Math.min(52,Math.max(1,Math.ceil((today-new Date(state.year,0,1))/(7*86400000)))):1;weekSel.value=state.week;save();render()});
+monthSel.addEventListener("change",e=>{state.month=+e.target.value;save();render()});weekSel.addEventListener("change",e=>{state.week=+e.target.value;save();render()});
+document.getElementById("prev").onclick=()=>{state.week=Math.max(1,state.week-1);weekSel.value=state.week;save();render()};document.getElementById("next").onclick=()=>{state.week=Math.min(52,state.week+1);weekSel.value=state.week;save();render()};
+document.getElementById("todayBtn").onclick=()=>{state.year=currentYear;yearSel.value=currentYear;state.week=Math.min(52,Math.max(1,Math.ceil((today-new Date(currentYear,0,1))/(7*86400000))));weekSel.value=state.week;state.month=today.getMonth();monthSel.value=state.month;save();render()};
+document.getElementById("addHabit").onclick=()=>{const input=document.getElementById("habitInput");const val=input.value.trim();if(!val)return;if(data().habits.length>=50){alert("You can track up to 50 habits.");return}const idx=data().habits.length;data().habits.push({name:val,icon:habitIcon(val),color:habitPalette[idx%habitPalette.length]});input.value="";save();render()};document.getElementById("habitInput").addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("addHabit").click()});
+document.getElementById("copyPrev").onclick=()=>{const prev=state.year-1;const prevData=getYear(prev);if(!prevData.habits.length){alert("No habits found in "+prev+".");return}if(confirm("Copy habit names from "+prev+"? This will not copy previous check-ins.")){data().habits=prevData.habits.map((h,i)=>typeof h==="string"?{name:h,icon:habitIcon(h),color:habitPalette[i%habitPalette.length]}:{...h});save();render()}};
+document.getElementById("export").onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`habit-tracker-${state.year}-backup.json`;a.click();URL.revokeObjectURL(a.href)};
+
+let installPrompt = null;
+const installNotice = document.getElementById("installNotice");
+const installButton = document.getElementById("installButton");
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  installPrompt = event;
+  installNotice.style.display = "block";
+});
+installButton.addEventListener("click", async () => {
+  if (installPrompt) {
+    installPrompt.prompt();
+    await installPrompt.userChoice;
+    installPrompt = null;
+    installNotice.style.display = "none";
+  } else {
+    document.getElementById("installHelp").textContent =
+      "On iPhone: open this app in Safari, tap Share, then Add to Home Screen. On Android: use your browser menu and choose Install app or Add to Home screen.";
+  }
+});
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>
